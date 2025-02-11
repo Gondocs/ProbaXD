@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Popup</title>
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p>This is an auto-popup! It won't appear again for an hour after closing.</p>
+        </div>
+    </div>
+
+    <script>
+        function setCookie(name, value, minutes) {
+            let date = new Date();
+            date.setTime(date.getTime() + (minutes * 60 * 1000));
+            document.cookie = name + "=" + value + "; expires=" + date.toUTCString() + "; path=/";
+        }
+
+        function getCookie(name) {
+            let cookies = document.cookie.split('; ');
+            for (let cookie of cookies) {
+                let [key, value] = cookie.split('=');
+                if (key === name) return value;
+            }
+            return null;
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            setCookie("popupClosed", "true", 60);
+        }
+
+        function checkPopup() {
+            if (!getCookie("popupClosed")) {
+                document.getElementById("popup").style.display = "block";
+            }
+        }
+
+        window.onload = checkPopup;
+    </script>
+</body>
+</html>
